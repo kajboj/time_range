@@ -1,4 +1,4 @@
-require 'time_range'
+require_relative '../time_range'
 
 describe TimeRange do
   describe 'instantiation' do
