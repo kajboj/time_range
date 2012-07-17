@@ -1,2 +1,3 @@
-source "http://rubygems.org"
-gem "rspec"
+source 'http://rubygems.org'
+gem 'rspec'
+gem 'timecop'
