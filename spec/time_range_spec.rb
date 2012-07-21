@@ -1,3 +1,4 @@
+require 'pry'
 require 'timecop'
 require_relative '../time_range'
 
@@ -42,9 +43,11 @@ describe TimeRange do
         '--O' => '16 16:00 - 17 16:00',
         'OO-' => '16 00:00 - 16 16:00',
         '-OO' => '16 08:00 - 17 00:00',
-        'OOO' => '16 00:00 - 17 00:00'
+        'OOO' => '16 00:00 - 17 00:00',
+
+        '--O--' => '16 00:00 - 17 00:00',
       }.each do |timebar, range|
-        start, finish = range.split '-'
+        start, finish = range.split('-').map(&:strip)
         context timebar do
           let(:bar) { timebar }
 
@@ -55,7 +58,7 @@ describe TimeRange do
       end
     end
 
-    ['', '-', '---'].each do |timebar|
+    ['', ' ', '-', '---'].each do |timebar|
       let(:bar) { timebar }
 
       context timebar do
@@ -76,9 +79,13 @@ describe TimeRange do
 
   def tr start_string, finish_string
     TimeRange.new(
-      Time.parse(start_string),
-      Time.parse(finish_string))
+      t(start_string),
+      t(finish_string))
+  end
+
+  def t time_string
+    DateTime.parse(time_string).to_time
   end
 end
 
-# 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+# 01 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
