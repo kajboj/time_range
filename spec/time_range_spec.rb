@@ -1,7 +1,7 @@
 require_relative 'spec_helper'
 
 describe TimeRange do
-  let(:now) { Time.local(2012, 07, 16, 10, 00, 00) }
+  let(:now) { Time.new(2012, 07, 16, 10, 00, 00) }
   before(:each) { Timecop.freeze now }
 
   describe '.new' do
@@ -25,6 +25,18 @@ describe TimeRange do
           end
         end
       end
+    end
+  end
+
+  describe '#==' do
+    let(:start)  { Time.now }
+    let(:finish) { Time.now + 1 }      
+
+    specify do
+      tr1 = TimeRange.new start, finish
+      tr2 = TimeRange.new start, finish
+
+      tr1.should == tr2
     end
   end
 end

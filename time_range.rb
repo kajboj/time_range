@@ -9,10 +9,7 @@ class TimeRange
     end
   end
 
-  def self.parse s
-    length = s.length
-
-    start  = find_start 
-    finish = find_finish
+  def ==(o)
+    start == o.start && finish == o.finish
   end
 end
