@@ -7,10 +7,6 @@ describe 'TimeRangeParser.parse' do
 
   subject(:time_range) { TimeRangeParser.parse bar }
 
-  specify do
-    tr("2012-07-16 08:00", "2012-07-16 16:00")
-  end
-
   context 'with valid non empty timebar' do
     {
       '-O-' => '16 08:00 - 16 16:00',
@@ -34,11 +30,11 @@ describe 'TimeRangeParser.parse' do
   end
 
   context 'with empty timebar' do
-    ['', ' ', '-', '---'].each do |timebar|
-      let(:bar) { timebar }
-
+    [nil, '', ' ', '-', '---'].each do |timebar|
       context timebar do
-        it { should == nil }
+        let(:bar) { timebar }
+
+        it { should be_nil }
       end
     end
   end
@@ -48,7 +44,7 @@ describe 'TimeRangeParser.parse' do
 
     specify do
       lambda do
-        TimeRange.parse('O-O')
+        subject
       end.should raise_error ArgumentError
     end
   end

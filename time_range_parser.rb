@@ -1,10 +1,29 @@
-module TimeRangeParser
-  extend self
+require_relative 'time_range'
 
-  def parse s
-    length = s.length
+class TimeRangeParser
+  def self.parse bar
+    TimeRangeParser.new(bar).parse
+  end
 
-    start  = find_start 
-    finish = find_finish
+  def initialize bar
+    @bar = bar
+  end
+
+  def parse
+    return nil if empty?
+  end
+
+  private
+
+  def empty?
+    chars = @bar.to_s.split('').uniq
+    chars.each do |c|
+      return false unless empty_chars.include? c
+    end
+    true
+  end
+
+  def empty_chars
+    [' ', '-']
   end
 end
