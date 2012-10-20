@@ -14,6 +14,5 @@ class TimeRange
 
     start  = find_start 
     finish = find_finish
-
   end
 end
