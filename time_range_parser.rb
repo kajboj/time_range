@@ -1,8 +1,30 @@
 require_relative 'time_range'
 
 class TimeRangeParser
-  def self.parse bar
-    TimeRangeParser.new(bar).parse
+  class << self
+    def parse bar
+      TimeRangeParser.new(bar).parse
+    end
+
+    attr_writer :bar_range
+
+    def bar_range
+      @bar_range || default_bar_range
+    end
+
+    def default_bar_range
+      TimeRange.new(
+        default_bar_start, default_bar_finish)
+    end
+
+    def default_bar_start
+      t = Time.now
+      Time.new t.year, t.month, t.day, 0, 0, 0
+    end
+
+    def default_bar_finish
+      default_bar_start + 24*60*60
+    end
   end
 
   def initialize bar
@@ -72,12 +94,15 @@ class TimeRangeParser
     @bar.to_s.split ''
   end
 
-  def bar_start
-    t = Time.now
-    Time.new t.year, t.month, t.day, 0, 0, 0
+  def bar_length_in_seconds
+    bar_finish - bar_start
   end
 
-  def bar_length_in_seconds
-    24*60*60
+  def bar_start
+    self.class.bar_range.start
+  end
+
+  def bar_finish
+    self.class.bar_range.finish
   end
 end

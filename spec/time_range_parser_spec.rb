@@ -23,6 +23,9 @@ describe 'TimeRangeParser.parse' do
 
       '--OO-' => '16 09:36:00 - 16 19:12:00',
       '- X? ' => '16 09:36:00 - 16 19:12:00',
+
+      # TODO Think about rounding/truncating.
+      # '--O----' => '16 06:51:25 - 16 10:17:08'
     }.each do |timebar, range|
       start, finish = range.split('-').map(&:strip)
       context timebar do
@@ -58,6 +61,30 @@ describe 'TimeRangeParser.parse' do
           lambda do
             subject
           end.should raise_error ArgumentError
+        end
+      end
+    end
+  end
+
+  describe 'with  start and finish of the time bar set' do
+    let(:bar) { '-O----' }
+
+    {
+      '16 00:00:00 - 22 00:00:00'  => '17 00:00:00 - 18 00:00:00',
+      '16 00:00:00 - 16 06:00:00'  => '16 01:00:00 - 16 02:00:00',
+      '16 00:00:00 - 16 00:00:06'  => '16 00:00:01 - 16 00:00:02'
+    }.each do |bar_range, range|
+      bar_start, bar_finish = bar_range .split('-').map(&:strip)
+      start,     finish     = range.split('-').map(&:strip)
+
+      context do
+        before do
+          TimeRangeParser.bar_range =
+            tr("2012-07-#{bar_start}", "2012-07-#{bar_finish}")
+        end
+
+        it "to #{bar_range} -O---- is parsed to #{range}" do
+          time_range.should == tr("2012-07-#{start}", "2012-07-#{finish}")
         end
       end
     end
