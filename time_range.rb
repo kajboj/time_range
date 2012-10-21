@@ -12,4 +12,11 @@ class TimeRange
   def ==(o)
     start == o.start && finish == o.finish
   end
+
+  def overlap o
+    TimeRange.new(
+      [start,  o.start ].max,
+      [finish, o.finish].min
+    )
+  end
 end

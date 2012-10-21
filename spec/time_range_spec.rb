@@ -39,6 +39,46 @@ describe TimeRange do
       tr1.should == tr2
     end
   end
+
+  describe 'overlap' do
+    [
+      %w(
+        OO----
+        ---OOO),
+      %w(
+        ---OOO
+        OO----),
+      %w(
+        OO----
+        --OOOO),
+      %w(
+        --OOOO
+        OO----),
+      %w(
+        OOO---
+        --OOOO
+        --O---),
+      %w(
+        --OOOO
+        OOO---
+        --O---),
+      %w(
+        --O---
+        --O---
+        --O---)
+    ].each do |bars|
+      tr1, tr2, expected = bars.map {|bar| trp bar}
+
+      specify "of #{bars[0..1].join(' and ')} == #{bars[2]}" do
+        returned = tr1.overlap(tr2)
+        if expected
+          returned.should == expected
+        else
+          returned.should be_nil
+        end
+      end
+    end
+  end
 end
 
 # 01 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
